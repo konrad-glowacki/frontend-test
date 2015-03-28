@@ -6,10 +6,10 @@ var gulp = require('gulp');
 // load plugins
 var $ = require('gulp-load-plugins')();
 
-gulp.task('styles', function () {
-    return gulp.src('app/styles/application.css')
-        .pipe(gulp.dest('.tmp/styles'))
-        .pipe($.size());
+gulp.task('sass', function () {
+  return gulp.src('app/scss/*.scss')
+    .pipe($.sass())
+    .pipe(gulp.dest('app/styles'));
 });
 
 gulp.task('scripts', function () {
@@ -86,7 +86,7 @@ gulp.task('connect', function () {
         });
 });
 
-gulp.task('serve', ['connect', 'styles'], function () {
+gulp.task('serve', ['connect', 'sass'], function () {
     require('opn')('http://localhost:8000');
 });
 
@@ -111,14 +111,14 @@ gulp.task('watch', ['connect', 'serve'], function () {
 
     gulp.watch([
         'app/*.html',
-        '.tmp/styles/**/*.css',
+        'app/scss/**/*.scss',
         'app/scripts/**/*.js',
         'app/images/**/*'
     ]).on('change', function (file) {
         server.changed(file.path);
     });
 
-    gulp.watch('app/styles/**/*.css', ['styles']);
+    gulp.watch('app/scss/**/*.scss', ['sass']);
     gulp.watch('app/scripts/**/*.js', ['scripts']);
     gulp.watch('app/images/**/*', ['images']);
     gulp.watch('bower.json', ['wiredep']);
